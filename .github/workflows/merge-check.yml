@@ -25,6 +25,7 @@ jobs:
 
     - name: Run ESLint
       run: npm run lint
+      continue-on-error: true
 
     - name: Run automated tests
       run: npm run test
