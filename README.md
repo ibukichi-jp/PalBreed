@@ -2,6 +2,19 @@
 
 パルワールド（Palworld）での「手持パル管理」および「自分で実際に体験した配合結果（親A ＋ 親B ➜ 生まれたパル）をメモ代わりに記録・検索する」ためのパーソナルブリーダー用WEBアプリケーションです。
 
+ユーザー自身がゲーム内で実際に試して見つけた配合結果をログとして書き留め、自分だけの配合データベースを構築していくことができます。
+
+---
+
+## 🎨 技術バッジ
+
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
 ---
 
 ## 🚀 主な機能
@@ -44,7 +57,7 @@ npm install
 ```
 
 ### 2. Supabase のデータベース構築
-Supabaseダッシュボードの **「SQL Editor」** を開き、プロジェクト内の [scripts/supabase_schema.sql](file:///scripts/supabase_schema.sql) の内容をすべて貼り付けて **「Run」** を実行します。
+Supabaseダッシュボードの **「SQL Editor」** を開き、プロジェクト内の `scripts/supabase_schema.sql` の内容をすべて貼り付けて **「Run」** を実行します。
 *(※ マスタデータのシードなどの初期データ投入は一切不要です)*
 
 ### 3. 環境変数の設定
@@ -76,3 +89,17 @@ npm run dev
 4. Supabaseの **「Authentication」** ➜ **「URL Configuration」** を開き、以下を設定します：
    * **Site URL**: 本番ドメイン (例: `https://palbreed.vercel.app`)
    * **Redirect URLs**: `http://localhost:3000/**` を追加（ローカル開発も併用できるようにするため）
+
+---
+
+## 📄 免責事項 (Disclaimer)
+
+* 本アプリケーションは個人によって開発された非公式のファンメイド作品です。
+* ゲーム『Palworld (パルワールド)』の提供元である株式会社ポケットペア（Pocketpair, Inc.）様とは一切関係がありません。
+* 本アプリで使用されているゲーム内の商標、名称などの知的財産権は、それぞれの権利所有者に帰属します。
+
+---
+
+## 📝 ライセンス
+
+このプロジェクトは [MIT License](LICENSE) の元で公開されています。
