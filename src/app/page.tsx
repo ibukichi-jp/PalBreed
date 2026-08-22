@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { Sparkles, AlertCircle, Plus, Trash2, BookOpen, PlusCircle, Search, Info } from 'lucide-react'
+import { version } from '../../package.json'
 
 interface RecipeMemo {
   id: number
@@ -407,7 +408,7 @@ export default function MyPalsPage() {
     <div className={isRetro ? "retro-theme min-h-screen p-4 space-y-8" : "container max-w-7xl px-4 py-8 mx-auto space-y-8"}>
       {isRetro && (
         <div className="w-full bg-[#000080] text-white py-1 px-3 text-xs font-bold select-none border-b-2 border-black flex justify-between items-center">
-          <span>PalBreed v1.2.0 - Retro Mode</span>
+          <span>PalBreed v{version} - Retro Mode</span>
           {React.createElement('marquee', { className: "w-2/3", scrollamount: "3" }, "ようこそ！パルブリード個人育成手帳へ！ 相互リンク募集中！ 最終更新日: 1998年8月22日 動作環境: Netscape Navigator 4.0以上、解像度800x600推奨")}
         </div>
       )}
