@@ -1,0 +1,8 @@
+#!/bin/sh
+current_branch=$(git branch --show-current)
+
+if [ "$current_branch" = "main" ]; then
+  echo "❌ ERROR: main ブランチへの直接コミットは禁止されています！"
+  echo "新しいトピックブランチ（例: git checkout -b feat/xxx）を作成し、そちらでコミットしてください。"
+  exit 1
+fi
