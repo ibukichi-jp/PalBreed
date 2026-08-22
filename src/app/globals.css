@@ -61,3 +61,160 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary));
 }
+
+/* ==========================================
+   1990年代レトロホームページ風テーマ (Retro Theme)
+   ========================================== */
+.retro-theme {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  font-family: "MS Pゴシック", "MS PGothic", "Hiragino Kaku Gothic ProN", "Times New Roman", serif !important;
+}
+
+/* 全体のレイアウトやコンテナの調整 */
+.retro-theme *,
+.retro-theme *::before,
+.retro-theme *::after {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
+  animation: none !important;
+  transition: none !important;
+  font-family: inherit !important;
+}
+
+/* カードを立体的な3Dベベル枠のコンテナにする */
+.retro-theme .card,
+.retro-theme [class*="bg-zinc-900"],
+.retro-theme [class*="bg-card"],
+.retro-theme fieldset,
+.retro-theme blockquote {
+  background-color: #c0c0c0 !important;
+  border: 2px outset #ffffff !important;
+  padding: 10px !important;
+  margin-bottom: 15px !important;
+}
+
+/* 枠線の表現 */
+.retro-theme .border,
+.retro-theme [class*="border-"] {
+  border: 1px solid #808080 !important;
+}
+
+/* ヘッダーやタイトル */
+.retro-theme h1,
+.retro-theme h2,
+.retro-theme h3,
+.retro-theme h4,
+.retro-theme [class*="CardTitle"] {
+  color: #000080 !important; /* クラシックネイビー */
+  font-weight: bold !important;
+  border-bottom: 2px solid #808080 !important;
+  padding-bottom: 4px !important;
+  margin-bottom: 10px !important;
+  font-family: serif !important;
+}
+
+/* フォーム入力欄 */
+.retro-theme input,
+.retro-theme select,
+.retro-theme textarea,
+.retro-theme [class*="Input"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 2px inset #ffffff !important;
+  padding: 4px 6px !important;
+  outline: none !important;
+}
+
+/* ボタン（3Dグレーボタン） */
+.retro-theme button,
+.retro-theme [class*="Button"] {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border: 2px outset #ffffff !important;
+  padding: 4px 16px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.retro-theme button:active,
+.retro-theme [class*="Button"]:active {
+  border: 2px inset #ffffff !important;
+  padding: 5px 15px 3px 17px !important;
+}
+
+/* リンク */
+.retro-theme a,
+.retro-theme [class*="link"] {
+  color: #0000ee !important;
+  text-decoration: underline !important;
+}
+
+.retro-theme a:visited {
+  color: #551a8b !important;
+}
+
+.retro-theme a:hover {
+  color: #ff0000 !important;
+}
+
+/* リストアイテム */
+.retro-theme ul {
+  list-style-type: square !important;
+  padding-left: 20px !important;
+}
+
+/* バッジやステータス表示 */
+.retro-theme [class*="badge"],
+.retro-theme [class*="bg-purple-600"] {
+  border: 1px dashed #000000 !important;
+  padding: 1px 4px !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  background-color: #ffffcc !important;
+  color: #ff0000 !important;
+}
+
+/* スクロールバーもクラシックなWindows 95/98風に */
+.retro-theme ::-webkit-scrollbar {
+  width: 16px !important;
+  height: 16px !important;
+}
+.retro-theme ::-webkit-scrollbar-track {
+  background: #dfdfdf !important;
+  border: 1px solid #808080 !important;
+}
+.retro-theme ::-webkit-scrollbar-thumb {
+  background: #c0c0c0 !important;
+  border: 2px outset #ffffff !important;
+}
+
+/* サジェストリストのクラシック化 */
+.retro-theme [class*="absolute z-50"] {
+  background-color: #ffffff !important;
+  border: 2px outset #ffffff !important;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5) !important;
+}
+
+.retro-theme [class*="absolute z-50"] > div {
+  color: #000000 !important;
+}
+
+.retro-theme [class*="absolute z-50"] > div:hover {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+}
+
+/* 検索ルーペアイコンを非表示にし、インプットの左パディングをプレーンに戻す */
+.retro-theme .search-icon {
+  display: none !important;
+}
+
+.retro-theme .search-input {
+  padding-left: 6px !important;
+}
