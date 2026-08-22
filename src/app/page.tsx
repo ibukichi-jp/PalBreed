@@ -752,9 +752,9 @@ export default function MyPalsPage() {
       {/* パル詳細モーダル */}
       {activeDetailPal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg bg-zinc-950 border border-border/80 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-lg bg-zinc-950 border border-border/80 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 dialog-window">
             {/* モーダルのヘッダー */}
-            <div className="flex justify-between items-center px-6 py-4 border-b border-border/40 bg-zinc-900/40">
+            <div className="flex justify-between items-center px-6 py-4 border-b border-border/40 bg-zinc-900/40 dialog-header">
               <h3 className="text-xl font-bold flex items-center gap-2 text-foreground">
                 <Sparkles className="h-5 w-5 text-primary" />
                 {activeDetailPal} の詳細

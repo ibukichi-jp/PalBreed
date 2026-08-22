@@ -218,3 +218,39 @@
 .retro-theme .search-input {
   padding-left: 6px !important;
 }
+
+/* 90年代風システムダイアログ（モーダル本体） */
+.retro-theme .dialog-window {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border: 2px outset #ffffff !important;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 濃紺のタイトルバー（ヘッダー） */
+.retro-theme .dialog-header {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+  padding: 4px 6px !important;
+  border-bottom: none !important;
+}
+
+/* タイトルバー内のテキストとアイコン */
+.retro-theme .dialog-header h3,
+.retro-theme .dialog-header svg {
+  color: #ffffff !important;
+}
+
+/* クラシックな閉じるボタン */
+.retro-theme .dialog-header button {
+  background-color: #c0c0c0 !important;
+  color: #000000 !important;
+  border: 2px outset #ffffff !important;
+  padding: 1px 6px !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+}
+
+.retro-theme .dialog-header button:active {
+  border: 2px inset #ffffff !important;
+}
