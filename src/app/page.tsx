@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getCurrentUser, MOCK_USER } from '@/lib/auth-helper'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -15,6 +15,13 @@ interface RecipeMemo {
   parent_b_name: string
   child_name: string
   is_mutation: boolean
+}
+
+// ひらがなをカタカナに変換するユーティリティ関数
+const hiraganaToKatakana = (str: string): string => {
+  return str.replace(/[\u3041-\u3096]/g, (match) => {
+    return String.fromCharCode(match.charCodeAt(0) + 0x60)
+  })
 }
 
 export default function MyPalsPage() {
@@ -36,6 +43,43 @@ export default function MyPalsPage() {
   const [parentB, setParentB] = useState('')
   const [child, setChild] = useState('')
   const [isMutation, setIsMutation] = useState(false)
+
+  // サジェスト表示用の状態
+  const [showSuggestionsA, setShowSuggestionsA] = useState(false)
+  const [showSuggestionsB, setShowSuggestionsB] = useState(false)
+
+  // 親Aの前方一致サジェスト候補
+  const suggestionsA = useMemo(() => {
+    const rawVal = parentA.trim()
+    if (!rawVal) return []
+    const val = hiraganaToKatakana(rawVal).toLowerCase()
+    return Array.from(ownedPalNames)
+      .sort()
+      .filter(name => name.toLowerCase().startsWith(val) && name.toLowerCase() !== val)
+  }, [parentA, ownedPalNames])
+
+  // 親Bの前方一致サジェスト候補
+  const suggestionsB = useMemo(() => {
+    const rawVal = parentB.trim()
+    if (!rawVal) return []
+    const val = hiraganaToKatakana(rawVal).toLowerCase()
+    return Array.from(ownedPalNames)
+      .sort()
+      .filter(name => name.toLowerCase().startsWith(val) && name.toLowerCase() !== val)
+  }, [parentB, ownedPalNames])
+
+  // 子パルサジェスト表示用の状態
+  const [showSuggestionsChild, setShowSuggestionsChild] = useState(false)
+
+  // 生まれたパルの前方一致サジェスト候補
+  const suggestionsChild = useMemo(() => {
+    const rawVal = child.trim()
+    if (!rawVal) return []
+    const val = hiraganaToKatakana(rawVal).toLowerCase()
+    return Array.from(ownedPalNames)
+      .sort()
+      .filter(name => name.toLowerCase().startsWith(val) && name.toLowerCase() !== val)
+  }, [child, ownedPalNames])
 
   // 詳細モーダル表示用の状態
   const [activeDetailPal, setActiveDetailPal] = useState<string | null>(null)
@@ -194,6 +238,12 @@ export default function MyPalsPage() {
 
     if (!pA || !pB || !ch) {
       alert('親A、親B、生まれたパルすべての名前を入力してください。')
+      return
+    }
+
+    // 手持ちパルに存在するかチェック
+    if (!ownedPalNames.has(pA) || !ownedPalNames.has(pB)) {
+      alert('親パルには、手持ちのパル（所持しているパル）のみを入力または選択してください。')
       return
     }
 
@@ -456,44 +506,92 @@ export default function MyPalsPage() {
             <CardContent>
               <form onSubmit={handleAddRecipe} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative">
                     <label className="text-xs font-semibold text-zinc-400">親パル A</label>
-                    <select
+                    <Input
+                      placeholder="親Aを入力または選択..."
                       value={parentA}
                       onChange={e => setParentA(e.target.value)}
-                      className="w-full h-10 px-3 bg-background border border-border rounded-md text-sm outline-none focus:ring-1 focus:ring-primary text-foreground"
-                    >
-                      <option value="">親Aを選択...</option>
-                      {Array.from(ownedPalNames).sort().map(name => (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
+                      onFocus={() => setShowSuggestionsA(true)}
+                      onBlur={() => setShowSuggestionsA(false)}
+                      className="bg-background border-border"
+                      autoComplete="off"
+                    />
+                    {showSuggestionsA && suggestionsA.length > 0 && (
+                      <div className="absolute top-full left-0 z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        {suggestionsA.map(name => (
+                          <div
+                            key={name}
+                            onMouseDown={(e) => {
+                              e.preventDefault()
+                              setParentA(name)
+                              setShowSuggestionsA(false)
+                            }}
+                            className="px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800 hover:text-white cursor-pointer transition-colors"
+                          >
+                            {name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative">
                     <label className="text-xs font-semibold text-zinc-400">親パル B</label>
-                    <select
+                    <Input
+                      placeholder="親Bを入力または選択..."
                       value={parentB}
                       onChange={e => setParentB(e.target.value)}
-                      className="w-full h-10 px-3 bg-background border border-border rounded-md text-sm outline-none focus:ring-1 focus:ring-primary text-foreground"
-                    >
-                      <option value="">親Bを選択...</option>
-                      {Array.from(ownedPalNames).sort().map(name => (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
+                      onFocus={() => setShowSuggestionsB(true)}
+                      onBlur={() => setShowSuggestionsB(false)}
+                      className="bg-background border-border"
+                      autoComplete="off"
+                    />
+                    {showSuggestionsB && suggestionsB.length > 0 && (
+                      <div className="absolute top-full left-0 z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        {suggestionsB.map(name => (
+                          <div
+                            key={name}
+                            onMouseDown={(e) => {
+                              e.preventDefault()
+                              setParentB(name)
+                              setShowSuggestionsB(false)
+                            }}
+                            className="px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800 hover:text-white cursor-pointer transition-colors"
+                          >
+                            {name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative">
                     <label className="text-xs font-semibold text-zinc-400">生まれたパル</label>
                     <Input
                       placeholder="生まれたパルの名前..."
                       value={child}
                       onChange={e => setChild(e.target.value)}
+                      onFocus={() => setShowSuggestionsChild(true)}
+                      onBlur={() => setShowSuggestionsChild(false)}
                       className="bg-background border-border animate-pulse-light"
+                      autoComplete="off"
                     />
+                    {showSuggestionsChild && suggestionsChild.length > 0 && (
+                      <div className="absolute top-full left-0 z-50 w-full mt-1 bg-zinc-900 border border-zinc-800 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        {suggestionsChild.map(name => (
+                          <div
+                            key={name}
+                            onMouseDown={(e) => {
+                              e.preventDefault()
+                              setChild(name)
+                              setShowSuggestionsChild(false)
+                            }}
+                            className="px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800 hover:text-white cursor-pointer transition-colors"
+                          >
+                            {name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
