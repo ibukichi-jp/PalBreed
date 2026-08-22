@@ -32,17 +32,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-zinc-955 to-black px-4">
-      {/* ガラスモーフィズム効果のあるログインカード */}
-      <Card className="w-full max-w-md border-border/40 bg-zinc-900/60 backdrop-blur-md shadow-2xl">
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <Card className="w-full max-w-md">
         <CardHeader className="text-center pb-2">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Sparkles className="h-6 w-6 animate-pulse" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <Sparkles className="h-6 w-6" />
           </div>
-          <CardTitle className="text-3xl font-extrabold tracking-wider text-primary">
+          <CardTitle className="text-3xl font-extrabold tracking-wider">
             PalBreed
           </CardTitle>
-          <CardDescription className="text-zinc-400 text-sm mt-1">
+          <CardDescription className="text-sm mt-1">
             パルワールド手持ちパル管理 & 配合シミュレータ
           </CardDescription>
         </CardHeader>
@@ -51,7 +50,7 @@ export default function LoginPage() {
           <Button
             onClick={handleGoogleLogin}
             disabled={loading || mockLoading}
-            className="w-full py-6 text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 shadow-[0_0_15px_rgba(14,165,233,0.3)] hover:shadow-[0_0_25px_rgba(14,165,233,0.5)]"
+            className="w-full py-6 text-base font-semibold"
           >
             {loading ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -80,11 +79,11 @@ export default function LoginPage() {
 
           {showMock && (
             <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-border/60"></div>
-              <span className="flex-shrink mx-4 text-zinc-500 text-xs uppercase tracking-widest font-mono">
+              <div className="flex-grow border-t"></div>
+              <span className="flex-shrink mx-4 text-xs uppercase tracking-widest font-mono">
                 DEVELOPMENT ONLY
               </span>
-              <div className="flex-grow border-t border-border/60"></div>
+              <div className="flex-grow border-t"></div>
             </div>
           )}
 
@@ -93,7 +92,7 @@ export default function LoginPage() {
               variant="outline"
               onClick={handleMockLogin}
               disabled={loading || mockLoading}
-              className="w-full py-6 text-sm font-semibold border-border hover:bg-zinc-800 text-zinc-300 hover:text-white transition-all duration-300"
+              className="w-full py-6 text-sm font-semibold"
             >
               {mockLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -106,7 +105,7 @@ export default function LoginPage() {
         </CardContent>
 
         <CardFooter className="justify-center pb-6">
-          <p className="text-zinc-500 text-xs text-center">
+          <p className="text-xs text-center">
             サインインすることで、配合レシピの検索や所持パルの保存機能が有効になります。
           </p>
         </CardFooter>

@@ -34,18 +34,14 @@ describe('Breeding Logic', () => {
       recipes: RecipeMemo[],
       parentAName: string,
       parentBName: string,
-      childName: string,
-      isMutation: boolean
+      childName: string
     ): boolean => {
-      return recipes.some(r => {
-        if (!isMutation) {
-          return r.parent_a_name === parentAName && r.parent_b_name === parentBName && !r.is_mutation
-        }
-        return r.parent_a_name === parentAName && 
-               r.parent_b_name === parentBName && 
-               r.child_name === childName && 
-               r.is_mutation
-      })
+      return recipes.some(
+        r =>
+          r.parent_a_name.toLowerCase() === parentAName.toLowerCase() &&
+          r.parent_b_name.toLowerCase() === parentBName.toLowerCase() &&
+          r.child_name.toLowerCase() === childName.toLowerCase()
+      )
     }
 
     const mockRecipes: RecipeMemo[] = [
@@ -53,31 +49,25 @@ describe('Breeding Logic', () => {
       { id: 2, parent_a_name: 'ツッパニャン', parent_b_name: 'モコロン', child_name: 'アヌビス', is_mutation: true }
     ]
 
-    test('prevents registering duplicate normal recipes for the same parent pair', () => {
-      // ツッパニャン + モコロン の通常配合 (is_mutation = false) は既に存在するため重複
-      const isDuplicate = checkDuplicate(mockRecipes, 'ツッパニャン', 'モコロン', 'チキピ', false)
+    test('prevents registering duplicate recipe with the exact same parent pair and child name', () => {
+      // 親と子が同じものは重複
+      const isDuplicate = checkDuplicate(mockRecipes, 'ツッパニャン', 'モコロン', 'チキピ')
       expect(isDuplicate).toBe(true)
     })
 
-    test('allows registering mutation recipe even if normal recipe for the same parent pair exists (different child name)', () => {
-      // ツッパニャン + モコロン の通常配合はあるが、新しい突然変異 (is_mutation = true, child = ジェドラン) は重複しない
-      const isDuplicate = checkDuplicate(mockRecipes, 'ツッパニャン', 'モコロン', 'ジェドラン', true)
+    test('allows registering recipe if the child name is different even with same parent pair', () => {
+      // 親が同じでも、生まれるパルが異なれば登録可能
+      const isDuplicate = checkDuplicate(mockRecipes, 'ツッパニャン', 'モコロン', 'ジェドラン')
       expect(isDuplicate).toBe(false)
     })
 
-    test('prevents registering duplicate mutation recipe with the exact same parent pair and child name', () => {
-      // ツッパニャン + モコロン -> アヌビス (is_mutation = true) は既に存在するため重複
-      const isDuplicate = checkDuplicate(mockRecipes, 'ツッパニャン', 'モコロン', 'アヌビス', true)
-      expect(isDuplicate).toBe(true)
-    })
-
-    test('allows registering normal recipe if only mutation recipes exist for the parent pair', () => {
-      const mutationOnlyRecipes = [
-        { id: 2, parent_a_name: 'ツッパニャン', parent_b_name: 'モコロン', child_name: 'アヌビス', is_mutation: true }
+    test('ignores character case when checking for duplicates', () => {
+      // アルファベットの大文字小文字表記が異なっても重複と判定される
+      const englishRecipes: RecipeMemo[] = [
+        { id: 1, parent_a_name: 'Lamball', parent_b_name: 'Chikipi', child_name: 'Anubis', is_mutation: false }
       ]
-      // 突然変異のみ登録されている場合、通常配合 (is_mutation = false) は登録可能
-      const isDuplicate = checkDuplicate(mutationOnlyRecipes, 'ツッパニャン', 'モコロン', 'チキピ', false)
-      expect(isDuplicate).toBe(false)
+      const isDuplicate = checkDuplicate(englishRecipes, 'lamball', 'chikipi', 'anubis')
+      expect(isDuplicate).toBe(true)
     })
   })
 })
