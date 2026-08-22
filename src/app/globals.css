@@ -194,18 +194,26 @@
   border: 2px outset #ffffff !important;
 }
 
-/* サジェストリストのクラシック化 */
-.retro-theme [class*="absolute z-50"] {
+/* サジェストリストのクラシック化 (z-50, z-10 両方に対応) */
+.retro-theme [class*="absolute z-"] {
   background-color: #ffffff !important;
   border: 2px outset #ffffff !important;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5) !important;
 }
 
-.retro-theme [class*="absolute z-50"] > div {
+.retro-theme [class*="absolute z-"] > div,
+.retro-theme [class*="absolute z-"] > button {
   color: #000000 !important;
+  background-color: #ffffff !important;
+  border: none !important;
+  padding: 4px 8px !important;
+  text-align: left !important;
+  width: 100% !important;
+  display: block !important;
 }
 
-.retro-theme [class*="absolute z-50"] > div:hover {
+.retro-theme [class*="absolute z-"] > div:hover,
+.retro-theme [class*="absolute z-"] > button:hover {
   background-color: #000080 !important;
   color: #ffffff !important;
 }
