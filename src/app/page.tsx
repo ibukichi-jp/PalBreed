@@ -495,7 +495,7 @@ export default function MyPalsPage() {
               ) : (
                 <div className="flex flex-wrap gap-2 max-h-80 overflow-y-auto pr-1">
                   {Array.from(ownedPalNames)
-                    .filter(name => name.includes(ownedSearch))
+                    .filter(name => name.includes(hiraganaToKatakana(ownedSearch)))
                     .map(name => (
                       <span
                         key={name}
@@ -679,11 +679,14 @@ export default function MyPalsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[450px] overflow-y-auto pr-1">
                   {recipes
-                    .filter(recipe => 
-                      recipe.parent_a_name.includes(recipeSearch) ||
-                      recipe.parent_b_name.includes(recipeSearch) ||
-                      recipe.child_name.includes(recipeSearch)
-                    )
+                    .filter(recipe => {
+                      const q = hiraganaToKatakana(recipeSearch)
+                      return (
+                        recipe.parent_a_name.includes(q) ||
+                        recipe.parent_b_name.includes(q) ||
+                        recipe.child_name.includes(q)
+                      )
+                    })
                     .map(recipe => {
                       const isParentAOwned = ownedPalNames.has(recipe.parent_a_name)
                       const isParentBOwned = ownedPalNames.has(recipe.parent_b_name)
