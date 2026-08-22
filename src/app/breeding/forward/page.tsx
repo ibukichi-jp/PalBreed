@@ -60,9 +60,6 @@ export default function ForwardBreedingPage() {
           if (savedRecipes) {
             const parsedRecipes = JSON.parse(savedRecipes)
             setRecipes(parsedRecipes)
-            if (parsedRecipes.length > 0) {
-              setSelectedParentA(parsedRecipes[0].parent_a_name)
-            }
           }
         } else {
           // Supabase接続時
@@ -87,10 +84,6 @@ export default function ForwardBreedingPage() {
             if (recipesError) throw recipesError
             if (recipesData) {
               setRecipes(recipesData as RecipeMemo[])
-              if (recipesData.length > 0) {
-                // デフォルトで最新の配合メモの親を選択
-                setSelectedParentA(recipesData[0].parent_a_name)
-              }
             }
           } catch (e) {
             console.error('Supabase load error. Using local storage.', e)
@@ -103,9 +96,6 @@ export default function ForwardBreedingPage() {
             if (savedRecipes) {
               const parsedRecipes = JSON.parse(savedRecipes)
               setRecipes(parsedRecipes)
-              if (parsedRecipes.length > 0) {
-                setSelectedParentA(parsedRecipes[0].parent_a_name)
-              }
             }
           }
         }
