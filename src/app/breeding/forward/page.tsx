@@ -34,6 +34,16 @@ export default function ForwardBreedingPage() {
   const [dbError, setDbError] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
 
+  const [isRetro, setIsRetro] = useState(false)
+
+  // レトロテーマの設定を LocalStorage から復元
+  useEffect(() => {
+    const saved = localStorage.getItem('palbreed-retro-mode')
+    if (saved === 'true') {
+      setIsRetro(true)
+    }
+  }, [])
+
   // 初期化とデータのロード
   useEffect(() => {
     async function init() {
@@ -152,7 +162,7 @@ export default function ForwardBreedingPage() {
     : registeredParents
 
   return (
-    <div className="container max-w-5xl px-4 py-8 mx-auto space-y-8">
+    <div className={isRetro ? "retro-theme min-h-screen p-4 space-y-8" : "container max-w-5xl px-4 py-8 mx-auto space-y-8"}>
       {/* イントロダクション */}
       <div className="border-b border-border/40 pb-6">
         <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-2">
@@ -176,7 +186,7 @@ export default function ForwardBreedingPage() {
         <div className="relative max-w-md space-y-2">
           <label className="text-sm font-semibold text-zinc-300">基準にする親パル (親A)</label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground search-icon" />
             <Input
               placeholder="親パル名を入力..."
               value={selectedParentA}
@@ -185,7 +195,7 @@ export default function ForwardBreedingPage() {
                 setShowDropdown(true)
               }}
               onFocus={() => setShowDropdown(true)}
-              className="pl-9 bg-background/50 border-border"
+              className="pl-9 bg-background/50 border-border search-input"
             />
           </div>
 
