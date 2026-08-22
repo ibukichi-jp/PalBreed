@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getCurrentUser, MOCK_USER } from '@/lib/auth-helper'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -32,6 +32,22 @@ export default function MyPalsPage() {
   const [recipes, setRecipes] = useState<RecipeMemo[]>([])
   
   const [dbError, setDbError] = useState(false)
+
+  const [isRetro, setIsRetro] = useState(false)
+
+  // レトロテーマの設定を LocalStorage から復元
+  useEffect(() => {
+    const saved = localStorage.getItem('palbreed-retro-mode')
+    if (saved === 'true') {
+      setIsRetro(true)
+    }
+  }, [])
+
+  // レトロテーマの変更を LocalStorage に保存
+  const handleToggleRetro = (val: boolean) => {
+    setIsRetro(val)
+    localStorage.setItem('palbreed-retro-mode', String(val))
+  }
 
   // 検索用キーワードの状態
   const [ownedSearch, setOwnedSearch] = useState('')
@@ -388,7 +404,14 @@ export default function MyPalsPage() {
     : []
 
   return (
-    <div className="container max-w-7xl px-4 py-8 mx-auto space-y-8">
+    <div className={isRetro ? "retro-theme min-h-screen p-4 space-y-8" : "container max-w-7xl px-4 py-8 mx-auto space-y-8"}>
+      {isRetro && (
+        <div className="w-full bg-[#000080] text-white py-1 px-3 text-xs font-bold select-none border-b-2 border-black flex justify-between items-center">
+          <span>PalBreed v1.2.0 - Retro Mode</span>
+          {React.createElement('marquee', { className: "w-2/3", scrollamount: "3" }, "ようこそ！パルブリード個人育成手帳へ！ 相互リンク募集中！ 最終更新日: 1998年8月22日 動作環境: Netscape Navigator 4.0以上、解像度800x600推奨")}
+        </div>
+      )}
+
       {/* イントロダクション */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-6">
         <div>
@@ -399,6 +422,15 @@ export default function MyPalsPage() {
           <p className="text-muted-foreground mt-2">
             自分で見つけたパルを登録し、体験した配合結果（親A ＋ 親B ➜ 子C）をメモ代わりに記録・管理する個人育成ブリーダー手帳です。
           </p>
+        </div>
+        <div className="flex items-center gap-2 self-start md:self-center">
+          <Button 
+            onClick={() => handleToggleRetro(!isRetro)}
+            variant={isRetro ? "default" : "outline"}
+            className={isRetro ? "" : "border-zinc-800 text-zinc-400 hover:text-zinc-200"}
+          >
+            {isRetro ? "⚡ モダンモードに戻る" : "💾 90年代レトロモード"}
+          </Button>
         </div>
       </div>
 
@@ -448,12 +480,12 @@ export default function MyPalsPage() {
             <CardContent className="space-y-4">
               {ownedPalNames.size > 0 && (
                 <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground search-icon" />
                   <Input
                     placeholder="手持ちパルを検索..."
                     value={ownedSearch}
                     onChange={e => setOwnedSearch(e.target.value)}
-                    className="pl-8 h-8 text-xs bg-background/50 border-border"
+                    className="pl-8 h-8 text-xs bg-background/50 border-border search-input"
                   />
                 </div>
               )}
@@ -629,12 +661,12 @@ export default function MyPalsPage() {
             <CardContent className="space-y-4">
               {recipes.length > 0 && (
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground search-icon" />
                   <Input
                     placeholder="配合メモをパル名で検索 (親A、親B、子)..."
                     value={recipeSearch}
                     onChange={e => setRecipeSearch(e.target.value)}
-                    className="pl-9 bg-background/50 border-border"
+                    className="pl-9 bg-background/50 border-border search-input"
                   />
                 </div>
               )}
