@@ -205,11 +205,22 @@ export default function MyPalsPage() {
     }
 
     // すでに同じ親の組み合わせが登録されているかチェック
-    const isDuplicate = recipes.some(
-      r => r.parent_a_name === parentAName && r.parent_b_name === parentBName
-    )
+    const isDuplicate = recipes.some(r => {
+      // 1. 通常配合を登録しようとしている場合、同じ親ペアの通常配合があれば重複
+      if (!isMutation) {
+        return r.parent_a_name === parentAName && r.parent_b_name === parentBName && !r.is_mutation
+      }
+      // 2. 突然変異配合を登録しようとしている場合、同じ親ペア・同じ子パル・突然変異のものが既に登録されていれば重複
+      return r.parent_a_name === parentAName && 
+             r.parent_b_name === parentBName && 
+             r.child_name === ch && 
+             r.is_mutation
+    })
     if (isDuplicate) {
-      alert('その親の組み合わせの配合メモは既に登録されています。')
+      alert(isMutation 
+        ? 'その親の組み合わせと突然変異パルのメモは既に登録されています。'
+        : 'その親の組み合わせの通常配合メモは既に登録されています。'
+      )
       return
     }
 

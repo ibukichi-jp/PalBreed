@@ -22,7 +22,7 @@ CREATE TABLE public.breed_recipes (
     child_name VARCHAR(50) NOT NULL,
     is_mutation BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_user_recipe UNIQUE (user_id, parent_a_name, parent_b_name)
+    CONSTRAINT unique_user_recipe UNIQUE (user_id, parent_a_name, parent_b_name, child_name, is_mutation)
 );
 
 -- Indexes for Query Performance
