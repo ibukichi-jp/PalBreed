@@ -7,6 +7,13 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Sparkles, HelpCircle, ArrowRight, Search, AlertCircle } from 'lucide-react'
 
+// ひらがなをカタカナに変換するユーティリティ関数
+const hiraganaToKatakana = (str: string): string => {
+  return str.replace(/[\u3041-\u3096]/g, (match) => {
+    return String.fromCharCode(match.charCodeAt(0) + 0x60)
+  })
+}
+
 interface RecipeMemo {
   id: number
   parent_a_name: string
@@ -134,7 +141,7 @@ export default function ReverseBreedingPage() {
 
   // 子パルの入力候補フィルタリング
   const suggestions = selectedChild
-    ? registeredChildren.filter(name => name.includes(selectedChild) && name !== selectedChild)
+    ? registeredChildren.filter(name => name.includes(hiraganaToKatakana(selectedChild)) && name !== selectedChild)
     : registeredChildren
 
   return (
