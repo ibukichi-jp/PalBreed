@@ -1,4 +1,12 @@
 describe('Breeding Logic', () => {
+  interface RecipeMemo {
+    id: number
+    parent_a_name: string
+    parent_b_name: string
+    child_name: string
+    is_mutation: boolean
+  }
+
   const sortParents = (parentA: string, parentB: string): [string, string] => {
     return [parentA, parentB].sort((a, b) => a.localeCompare(b)) as [string, string]
   }
@@ -22,13 +30,6 @@ describe('Breeding Logic', () => {
   })
 
   describe('Recipe Duplication Check', () => {
-    interface RecipeMemo {
-      id: number
-      parent_a_name: string
-      parent_b_name: string
-      child_name: string
-      is_mutation: boolean
-    }
 
     const checkDuplicate = (
       recipes: RecipeMemo[],
@@ -68,6 +69,59 @@ describe('Breeding Logic', () => {
       ]
       const isDuplicate = checkDuplicate(englishRecipes, 'lamball', 'chikipi', 'anubis')
       expect(isDuplicate).toBe(true)
+    })
+  })
+
+  describe('Recipe Search Filtering', () => {
+    const filterRecipes = (
+      recipes: RecipeMemo[],
+      query: string,
+      searchParent: boolean,
+      searchChild: boolean
+    ): RecipeMemo[] => {
+      const q = query.trim().toLowerCase()
+      if (q === '') return recipes
+      const isNoFilter = !searchParent && !searchChild
+      return recipes.filter(r => {
+        const matchParent = (searchParent || isNoFilter) && (
+          r.parent_a_name.toLowerCase().includes(q) ||
+          r.parent_b_name.toLowerCase().includes(q)
+        )
+        const matchChild = (searchChild || isNoFilter) && r.child_name.toLowerCase().includes(q)
+        return matchParent || matchChild
+      })
+    }
+
+    const testRecipes: RecipeMemo[] = [
+      { id: 1, parent_a_name: 'モコロン', parent_b_name: 'ツッパニャン', child_name: 'チキピ', is_mutation: false },
+      { id: 2, parent_a_name: 'アヌビス', parent_b_name: 'ツッパニャン', child_name: 'モコロン', is_mutation: false },
+      { id: 3, parent_a_name: 'アヌビス', parent_b_name: 'ジェドラン', child_name: 'ホルス', is_mutation: true }
+    ]
+
+    test('matches both parent and child when both search flags are true', () => {
+      const results = filterRecipes(testRecipes, 'モコロン', true, true)
+      expect(results.length).toBe(2)
+      expect(results.some(r => r.id === 1)).toBe(true)
+      expect(results.some(r => r.id === 2)).toBe(true)
+    })
+
+    test('matches only parent when searchParent is true and searchChild is false', () => {
+      const results = filterRecipes(testRecipes, 'モコロン', true, false)
+      expect(results.length).toBe(1)
+      expect(results[0].id).toBe(1)
+    })
+
+    test('matches only child when searchParent is false and searchChild is true', () => {
+      const results = filterRecipes(testRecipes, 'モコロン', false, true)
+      expect(results.length).toBe(1)
+      expect(results[0].id).toBe(2)
+    })
+
+    test('matches both parent and child when both searchParent and searchChild are false', () => {
+      const results = filterRecipes(testRecipes, 'モコロン', false, false)
+      expect(results.length).toBe(2)
+      expect(results.some(r => r.id === 1)).toBe(true)
+      expect(results.some(r => r.id === 2)).toBe(true)
     })
   })
 })

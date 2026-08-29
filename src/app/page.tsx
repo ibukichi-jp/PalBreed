@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/client'
 import { getCurrentUser, MOCK_USER } from '@/lib/auth-helper'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { Sparkles, AlertCircle, Trash2, BookOpen, PlusCircle, Search, Check, X } from 'lucide-react'
 
@@ -48,6 +47,8 @@ export default function MyPalsPage() {
 
   // 検索用キーワードの状態
   const [recipeSearch, setRecipeSearch] = useState('')
+  const [searchParent, setSearchParent] = useState(false)
+  const [searchChild, setSearchChild] = useState(false)
 
   // 入力フォームの状態
   const [parentA, setParentA] = useState('')
@@ -424,11 +425,12 @@ export default function MyPalsPage() {
 
                 <div className="flex flex-col gap-4 pt-2">
                   <div className="flex items-center space-x-2">
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       id="is-mutation"
                       checked={isMutation}
-                      onCheckedChange={(checked) => setIsMutation(!!checked)}
-                      className="border-muted-foreground/60 data-[state=checked]:bg-purple-600 data-[state=checked]:text-white"
+                      onChange={(e) => setIsMutation(e.target.checked)}
+                      className="rounded border-zinc-700 bg-zinc-800 text-purple-600 focus:ring-purple-600 focus:ring-offset-zinc-900 cursor-pointer h-4 w-4"
                     />
                     <label
                       htmlFor="is-mutation"
@@ -474,23 +476,57 @@ export default function MyPalsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {recipes.length > 0 && (
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground search-icon" />
-                  <Input
-                    placeholder="配合メモをパル名で検索 (親A、親B、子)..."
-                    value={recipeSearch}
-                    onChange={e => setRecipeSearch(e.target.value)}
-                    className="pl-9 pr-8 bg-background/50 border-border search-input"
-                  />
-                  {recipeSearch && (
-                    <button
-                      type="button"
-                      onClick={() => setRecipeSearch('')}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
+                <div className="space-y-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground search-icon" />
+                    <Input
+                      placeholder="配合メモをパル名で検索..."
+                      value={recipeSearch}
+                      onChange={e => setRecipeSearch(e.target.value)}
+                      className="pl-9 pr-8 bg-background/50 border-border search-input"
+                    />
+                    {recipeSearch && (
+                      <button
+                        type="button"
+                        onClick={() => setRecipeSearch('')}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex gap-4 text-xs">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="search-parent"
+                        checked={searchParent}
+                        onChange={(e) => setSearchParent(e.target.checked)}
+                        className="rounded border-zinc-700 bg-zinc-800 text-primary focus:ring-primary focus:ring-offset-zinc-900 cursor-pointer h-4 w-4"
+                      />
+                      <label
+                        htmlFor="search-parent"
+                        className="text-zinc-300 cursor-pointer select-none font-medium"
+                      >
+                        親パルを検索対象にする
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="search-child"
+                        checked={searchChild}
+                        onChange={(e) => setSearchChild(e.target.checked)}
+                        className="rounded border-zinc-700 bg-zinc-800 text-primary focus:ring-primary focus:ring-offset-zinc-900 cursor-pointer h-4 w-4"
+                      />
+                      <label
+                        htmlFor="search-child"
+                        className="text-zinc-300 cursor-pointer select-none font-medium"
+                      >
+                        子パルを検索対象にする
+                      </label>
+                    </div>
+                  </div>
                 </div>
               )}
               {recipes.length === 0 ? (
@@ -503,11 +539,13 @@ export default function MyPalsPage() {
                   {recipes
                     .filter(recipe => {
                       const q = hiraganaToKatakana(recipeSearch)
-                      return (
+                      const isNoFilter = !searchParent && !searchChild
+                      const matchParent = (searchParent || isNoFilter) && (
                         recipe.parent_a_name.includes(q) ||
-                        recipe.parent_b_name.includes(q) ||
-                        recipe.child_name.includes(q)
+                        recipe.parent_b_name.includes(q)
                       )
+                      const matchChild = (searchChild || isNoFilter) && recipe.child_name.includes(q)
+                      return matchParent || matchChild
                     })
                     .map(recipe => {
                       return (
