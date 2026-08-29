@@ -33,13 +33,17 @@ export async function getCurrentUser() {
 
 export async function signInWithGoogle() {
   const supabase = createClient()
-  const { error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: `${window.location.origin}/auth/callback`,
+      skipBrowserRedirect: true,
     },
   })
   if (error) throw error
+  if (data?.url) {
+    window.location.assign(data.url)
+  }
 }
 
 export async function signInMock() {

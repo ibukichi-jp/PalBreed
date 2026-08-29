@@ -1,27 +1,55 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { signInWithGoogle, signInMock, isMockEnabled } from '@/lib/auth-helper'
 import { Sparkles, HelpCircle, Loader2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
-  const [showMock, setShowMock] = useState(false)
+  const showMock = isMockEnabled()
   const [loading, setLoading] = useState(false)
   const [mockLoading, setMockLoading] = useState(false)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    setShowMock(isMockEnabled())
+    // 事前にSupabaseクライアントを初期化しておくことで、クリック時の遅延を回避する
+    createClient()
+
+    const handlePageShow = () => {
+      setLoading(false)
+    }
+    window.addEventListener('pageshow', handlePageShow)
+
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow)
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+    }
   }, [])
 
   const handleGoogleLogin = async () => {
     try {
       setLoading(true)
+
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+
+      timerRef.current = setTimeout(() => {
+        setLoading(false)
+      }, 8000)
+
       await signInWithGoogle()
     } catch (e) {
       console.error(e)
       setLoading(false)
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
       alert('Googleログインの開始に失敗しました。')
     }
   }
@@ -42,7 +70,7 @@ export default function LoginPage() {
             PalBreed
           </CardTitle>
           <CardDescription className="text-sm mt-1">
-            パルワールド手持ちパル管理 & 配合シミュレータ
+            パルワールド手持ちパル管理
           </CardDescription>
         </CardHeader>
         
